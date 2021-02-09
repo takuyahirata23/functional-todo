@@ -1,10 +1,17 @@
 /**@jsx jsx */
+import React from 'react'
 import { jsx } from "@emotion/core"
 import styled from "@emotion/styled"
 import PropTypes from "prop-types"
 import { RiDeleteBin3Line } from "react-icons/ri"
 
-function TodoList({ list, removeTodo }) {
+interface Props  {
+  list: [];
+  removeTodo: () => void;
+}
+
+const TodoList: React.FC<Props> = ({ list, removeTodo }) => {
+  console.log(list)
   return (
     <Ul>
       {list.map(({ id, todo }) => (
