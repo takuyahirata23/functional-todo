@@ -31,11 +31,11 @@ const App: React.FC = () => {
   // These are not pure===========================================
   const removeTodo = compose(setTodoList, curriedRemoveItem)
 
-  function generateNewItem(todo: Todo) {
+  function generateNewItem(todo: string) {
     return { id: uuid(), todo }
   }
 
-  function done(newItem: Todo) {
+  function done(newItem: string) {
     setInput("")
     setError(null)
     setTodoList([generateNewItem(newItem), ...todoList])
@@ -45,9 +45,8 @@ const App: React.FC = () => {
   function handleOnSubmit(e: React.SyntheticEvent) {
     e.preventDefault()
     pipe(validateItem(input), fold(setError, done))
-    // validateItem(input).fold(setError, done)
   }
-  //=============================================================
+
   return (
     <div>
       <Main>
