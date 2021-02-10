@@ -6,8 +6,8 @@ import styled from "@emotion/styled"
 interface Props {
   input: string;
   setInput: (value: string) => void;
-  error: string;
-  handleOnSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  error: string | null;
+  handleOnSubmit: (e: React.SyntheticEvent) => void;
 }
 
 const TodoForm: React.FC<Props>= ({ input, setInput, error, handleOnSubmit }) => {
