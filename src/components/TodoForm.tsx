@@ -1,10 +1,17 @@
 /**@jsx jsx */
+import React from 'react'
 import { jsx } from "@emotion/core"
 import styled from "@emotion/styled"
-import PropTypes from "prop-types"
 
-function TodoForm({ input, setInput, error, handleOnSubmit }) {
-  function handleOnChange(e) {
+interface Props {
+  input: string;
+  setInput: (value: string) => void;
+  error: string;
+  handleOnSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+}
+
+const TodoForm: React.FC<Props>= ({ input, setInput, error, handleOnSubmit }) => {
+  const handleOnChange  = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setInput(e.target.value)
   }
 
@@ -21,11 +28,6 @@ function TodoForm({ input, setInput, error, handleOnSubmit }) {
       {Boolean(error) && <Span>{error}</Span>}
     </form>
   )
-}
-
-TodoForm.propTypes = {
-  input: PropTypes.string.isRequired,
-  setInput: PropTypes.func.isRequired,
 }
 
 const Input = styled.input`
