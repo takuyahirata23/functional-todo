@@ -4,43 +4,49 @@ import { css, jsx } from "@emotion/core"
 import styled from "@emotion/styled"
 import { uuid } from "uuidv4"
 import { curryN, compose } from "ramda"
-import Result from "folktale/result"
+import { right, left, fold, Either } from 'fp-ts/lib/Either'
+import { pipe } from "fp-ts/function";
 import TodoForm from "./components/TodoForm"
 import useLocalStorage from "./hooks/useLocalStorage"
 import TodoList from "./components/TodoList"
+interface Todo {
+  id: string;
+  todo: string;
+}
 
-const validateItem = str =>
+const validateItem = (str: string): Either<string, string> =>
   str.trim().length > 0
-    ? Result.Ok(str)
-    : Result.Error("Please enter a valid value")
+    ? right(str)
+    : left("Please enter a valid value")
 
-const removeItem = (list, id) => list.filter(item => item.id !== id)
+const removeItem = (list: Todo[], id: string) => list.filter(item => item.id !== id)
 
-function App() {
+const App: React.FC = () => {
   const [todoList, setTodoList] = useLocalStorage("todoList", [])
-  const [input, setInput] = useState("")
-  const [error, setError] = useState(null)
+  const [input, setInput] = useState<string>("")
+  const [error, setError] = useState<string | null>(null)
 
   const curriedRemoveItem = curryN(2, removeItem)(todoList)
 
   // These are not pure===========================================
   const removeTodo = compose(setTodoList, curriedRemoveItem)
 
-  function generateNewItem(todo) {
+  function generateNewItem(todo: string) {
     return { id: uuid(), todo }
   }
 
-  function done(newItem) {
+  function done(newItem: string) {
     setInput("")
     setError(null)
     setTodoList([generateNewItem(newItem), ...todoList])
   }
 
-  function handleOnSubmit(e) {
+
+  function handleOnSubmit(e: React.SyntheticEvent) {
     e.preventDefault()
-    validateItem(input).fold(setError, done)
+    pipe(validateItem(input), fold(setError, done))
   }
-  //=============================================================
+
   return (
     <div>
       <Main>
@@ -101,7 +107,8 @@ const Buttons = styled.div(props => ({
   columnGap: "2rem",
   justifyContent: "center",
 }))
-const Button = styled.button(({ secondary, disabled }) => ({
+
+const Button = styled.button<{ secondary?: boolean, disabled?: boolean}>(({ secondary, disabled }) => ({
   backgroundColor: secondary ? "tomato" : "darkblue",
   color: "white",
   padding: ".5rem 1rem",
