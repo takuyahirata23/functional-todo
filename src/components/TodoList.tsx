@@ -2,17 +2,20 @@
 import React from 'react'
 import { jsx } from "@emotion/core"
 import styled from "@emotion/styled"
-import PropTypes from "prop-types"
 import { RiDeleteBin3Line } from "react-icons/ri"
 
-interface Props  {
-  list: [];
-  removeTodo: () => void;
+interface Todo {
+  id: string;
+  todo: string;
 }
 
-const TodoList: React.FC<Props> = ({ list, removeTodo }) => {
-  console.log(list)
-  return (
+interface Props  {
+  list: Todo[];
+  removeTodo: (id: string) => void;
+}
+
+const TodoList: React.FC<Props> = ({ list, removeTodo }) => 
+   (
     <Ul>
       {list.map(({ id, todo }) => (
         <Li key={id}>
@@ -24,12 +27,7 @@ const TodoList: React.FC<Props> = ({ list, removeTodo }) => {
       ))}
     </Ul>
   )
-}
 
-TodoList.propTypes = {
-  list: PropTypes.array.isRequired,
-  removeTodo: PropTypes.func.isRequired,
-}
 
 const Ul = styled.ul(props => ({
   display: "grid",
